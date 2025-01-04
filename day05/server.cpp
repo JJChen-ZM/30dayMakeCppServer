@@ -10,6 +10,7 @@
 #include "Socket.h"
 #include "Epoll.h"
 #include "InetAddress.h"
+#include "Channel.h"
 
 #define MAX_EVENTS 1024
 #define READ_BUFFER 1024
@@ -25,14 +26,16 @@ int main(){
 
     Epoll *ep = new Epoll();
     serv_socket->setnonblocking();
-    ep->addFd(serv_socket->getFd(), EPOLLIN | EPOLLET);
+    // ep->addFd(serv_socket->getFd(), EPOLLIN | EPOLLET);
+    Channel *servChannel = new Channel(ep, serv_socket->getFd());
+    servChannel->enableReading();
  
     while (true){
-        std::vector<epoll_event> events = ep->poll();
-        // int nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
-        // errif(nfds == -1, "epoll wait error");
-        for(int i=0; i<events.size(); i++){
-            if (events[i].data.fd == serv_socket->getFd()) //新客户端连接
+        std::vector<Channel*> activeChannels = ep->poll();
+        int nfds = activeChannels.size();
+        for(int i=0; i<nfds; i++){
+            int chfd = activeChannels[i]->getFd();
+            if (chfd == serv_socket->getFd()) //新客户端连接
             {
                 InetAddress *clnt_addr = new InetAddress(); //会发生内存泄露！没有delete
                 int clnt_sockfd = serv_socket->accept(clnt_addr);
@@ -41,9 +44,11 @@ int main(){
                 printf("new client fd %d! IP: %s Port: %d\n", clnt_socket->getFd(), inet_ntoa(clnt_addr->addr.sin_addr), ntohs(clnt_addr->addr.sin_port));
                 
                 clnt_socket->setnonblocking();
-                ep->addFd(clnt_socket->getFd(), EPOLLIN | EPOLLET);
-            } else if(events[i].events & EPOLLIN){  // 可读事件
-                handleReadEvent(events[i].data.fd);
+                // ep->addFd(clnt_socket->getFd(), EPOLLIN | EPOLLET);
+                Channel *clntChannel = new Channel(ep, clnt_socket->getFd());
+                clntChannel->enableReading();
+            } else if(activeChannels[i].getRevents() & EPOLLIN){  // 可读事件
+                handleReadEvent(chfd);
             } else{
                 printf("something else happened\n");
             }

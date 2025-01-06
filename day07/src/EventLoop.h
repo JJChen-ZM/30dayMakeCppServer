@@ -13,4 +13,4 @@ public:
 
     void loop();
     void updateChannel(Channel*);
-}
+};

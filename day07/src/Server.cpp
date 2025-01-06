@@ -1,7 +1,13 @@
+#include <iostream>
+#include <unistd.h>
+#include <string.h>
 #include "Server.h"
 #include "Socket.h"
 #include "InetAddress.h"
 #include "Acceptor.h"
+#include "Channel.h"
+
+#define READ_BUFFER 1024
 
 Server::Server(EventLoop *_loop) : loop(_loop){
     // Socket *serv_socket = new Socket();
@@ -17,7 +23,7 @@ Server::Server(EventLoop *_loop) : loop(_loop){
     // servChannel->setCallback(cb);
     // servChannel->enableReading();
     acceptor = new Acceptor(loop);
-    std::function<void(Socket*)> cb = std::bind(&Server::newConnection, this, std::placeholders::_1)
+    std::function<void(Socket*)> cb = std::bind(&Server::newConnection, this, std::placeholders::_1);
     acceptor->setNewConnectionCallback(cb);
 }
 

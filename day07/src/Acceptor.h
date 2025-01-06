@@ -20,4 +20,4 @@ public:
     void setNewConnectionCallback(std::function<void(Socket*)>);
 
     std::function<void(Socket*)> newConnectionCallback;
-}
+};

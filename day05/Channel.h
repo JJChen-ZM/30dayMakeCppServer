@@ -23,4 +23,4 @@ public:
     void setInEpoll();
 
     void setRevents(uint32_t);
-}
+};

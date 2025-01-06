@@ -38,7 +38,7 @@ void Epoll::updateChannel(Channel* channel)
     struct epoll_event ev;
     bzero(&ev, sizeof(ev));
     ev.data.ptr = channel;
-    ev.events = channel->getEvent();
+    ev.events = channel->getEvents();
     if(!channel->getInEpoll()){
         errif(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1, "epoll add error");
         channel->setInEpoll();

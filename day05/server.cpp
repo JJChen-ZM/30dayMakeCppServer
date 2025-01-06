@@ -47,7 +47,7 @@ int main(){
                 // ep->addFd(clnt_socket->getFd(), EPOLLIN | EPOLLET);
                 Channel *clntChannel = new Channel(ep, clnt_socket->getFd());
                 clntChannel->enableReading();
-            } else if(activeChannels[i].getRevents() & EPOLLIN){  // 可读事件
+            } else if(activeChannels[i]->getRevents() & EPOLLIN){  // 可读事件
                 handleReadEvent(chfd);
             } else{
                 printf("something else happened\n");

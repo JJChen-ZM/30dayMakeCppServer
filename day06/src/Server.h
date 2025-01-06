@@ -12,4 +12,4 @@ public:
 
     void handleReadEvent(int);
     void newConnection(Socket *serv_socket);
-}
+};

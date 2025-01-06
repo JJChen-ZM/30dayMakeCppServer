@@ -1,5 +1,5 @@
 server:
-	g++ util.cpp client.cpp -o client && \
-	g++ util.cpp server.cpp Epoll.cpp InetAddress.cpp Socket.cpp -o server
+	g++ src/util.cpp client.cpp -o client && \
+	g++ src/util.cpp server.cpp src/Epoll.cpp src/InetAddress.cpp src/Socket.cpp src/Channel.cpp src/Server.cpp src/EventLoop.cpp -o server
 clean:
 	rm -rf client server

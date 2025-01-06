@@ -29,4 +29,4 @@ public:
 
     void setRevents(uint32_t);
     void setCallback(std::function<void()>);
-}
+};

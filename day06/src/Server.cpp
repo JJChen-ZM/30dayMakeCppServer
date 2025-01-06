@@ -1,6 +1,13 @@
 #include "Server.h"
 #include "Socket.h"
 #include "InetAddress.h"
+#include "Channel.h"
+#include <functional>
+#include <string.h>
+#include <unistd.h>
+#include <iostream>
+
+#define READ_BUFFER 1024
 
 Server::Server(EventLoop *_loop) : loop(_loop){
     Socket *serv_socket = new Socket();
